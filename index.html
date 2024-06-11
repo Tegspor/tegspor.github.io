@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Telegram Mini App</title>
+    <title>Click the Coin Game</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -15,49 +15,33 @@
             margin: 0;
             background-color: #f7f7f7;
         }
-        button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
+        h1 {
+            margin-bottom: 20px;
+        }
+        .coin {
+            width: 100px;
+            height: 100px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/1_Euro_coin%2C_2007_reverse.svg/1024px-1_Euro_coin%2C_2007_reverse.svg.png');
+            background-size: cover;
             cursor: pointer;
+        }
+        .balance {
+            margin-top: 20px;
+            font-size: 24px;
         }
     </style>
 </head>
 <body>
-    <h1>Telegram Mini App</h1>
-    <button onclick="sendCommand('start')">Start</button>
-    <button onclick="sendCommand('help')">Help</button>
-    <button onclick="sendCommand('about')">About</button>
-    <button onclick="sendCommand('time')">Time</button>
-    <button onclick="sendCommand('joke')">Joke</button>
+    <h1>Click the Coin Game</h1>
+    <div class="coin" onclick="incrementBalance()"></div>
+    <div class="balance">Balance: <span id="balance">0</span></div>
 
     <script>
-        function sendCommand(command) {
-            const botToken = '7378535391:AAEgs6PonZuj06pwDJ0ic0COVHNxrPhld10';
-            const chatId = Telegram.WebApp.initDataUnsafe.user.id;
+        let balance = 0;
 
-            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    chat_id: chatId,
-                    text: `/${command}`
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.ok) {
-                    alert(`Command /${command} sent successfully!`);
-                } else {
-                    alert('Error sending command.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error sending command.');
-            });
+        function incrementBalance() {
+            balance += 1;
+            document.getElementById('balance').innerText = balance;
         }
 
         Telegram.WebApp.ready();
