@@ -58,6 +58,7 @@
 
     <script>
         let balance = localStorage.getItem('balance') || 0;
+        let clickSound = new Audio('https://freesound.org/data/previews/41/41168_382-lq.mp3');
 
         function updateBalanceDisplay() {
             document.getElementById('balance').innerText = balance;
@@ -68,10 +69,8 @@
             localStorage.setItem('balance', balance);
             updateBalanceDisplay();
 
-            // Vibrate for 200 milliseconds
-            if (window.navigator && window.navigator.vibrate) {
-                window.navigator.vibrate(200);
-            }
+            // Play the click sound
+            clickSound.play();
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
