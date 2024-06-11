@@ -29,14 +29,25 @@
             border-radius: 50%;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             transition: transform 0.1s ease;
+            animation: clickAnimation 0.2s ease-in-out;
+            animation-fill-mode: forwards;
         }
         .coin:active {
-            transform: scale(0.9);
+            animation-name: clickActiveAnimation;
         }
         .balance {
             margin-top: 20px;
             font-size: 24px;
             color: #fff;
+        }
+        @keyframes clickAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        @keyframes clickActiveAnimation {
+            0% { transform: scale(1); }
+            100% { transform: scale(0.9); }
         }
     </style>
 </head>
