@@ -52,11 +52,6 @@
             balance = parseInt(balance) + 1;
             localStorage.setItem('balance', balance);
             updateBalanceDisplay();
-
-            // Добавляем тактильный отклик для iPhone
-            if (window.navigator.vibrate) {
-                window.navigator.vibrate([100]); // Параметры вибрации могут варьироваться
-            }
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
