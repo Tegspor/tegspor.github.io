@@ -5,81 +5,53 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click the Coin Game</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            background: radial-gradient(circle at center, orange, black);
-        }
-        h1 {
-            margin-bottom: 20px;
-            color: #fff;
-        }
-        .coin {
-            width: 250px;
-            height: 250px;
-            background-image: url('https://www.virtune.com/_next/static/media/bitcoin_logo.11509738.png');
-            background-size: cover;
-            background-position: center;
-            cursor: pointer;
-            border-radius: 50%;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            transition: transform 0.1s ease;
-            animation: clickAnimation 0.2s ease-in-out;
-            animation-fill-mode: forwards;
-        }
-        .coin:active {
-            animation-name: clickActiveAnimation;
-        }
-        .balance {
-            margin-top: 20px;
-            font-size: 24px;
-            color: #fff;
-        }
-        @keyframes clickAnimation {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.9); }
-            100% { transform: scale(1); }
-        }
-        @keyframes clickActiveAnimation {
-            0% { transform: scale(1); }
-            100% { transform: scale(0.9); }
-        }
+        /* ... ваш CSS код ... */
     </style>
 </head>
 <body>
     <h1>Click the Coin Game</h1>
     <div class="coin" onclick="incrementBalance()"></div>
     <div class="balance">Balance: <span id="balance">0</span></div>
+    <div class="energy">Energy: <span id="energy">5000</span></div>
+    <button id="restoreEnergy" onclick="restoreEnergy()" disabled>Restore Energy</button>
 
     <script>
         let balance = localStorage.getItem('balance') || 0;
+        let energy = localStorage.getItem('energy') || 5000;
         let clickSound = new Audio('https://raw.githubusercontent.com/Tegspor/tegspor.github.io/main/506052__mellau__button-click-3.wav');
 
         function updateBalanceDisplay() {
             document.getElementById('balance').innerText = balance;
+            document.getElementById('energy').innerText = energy;
+            document.getElementById('restoreEnergy').disabled = energy >= 5000;
         }
 
         function incrementBalance() {
-            balance = parseInt(balance) + 1;
-            localStorage.setItem('balance', balance);
-            updateBalanceDisplay();
+            if (energy > 0) {
+                balance = parseInt(balance) + 1;
+                energy = parseInt(energy) - 1;
+                localStorage.setItem('balance', balance);
+                localStorage.setItem('energy', energy);
+                updateBalanceDisplay();
+            }
+        }
 
-            // Play the click sound
+        function restoreEnergy() {
+            energy = 5000;
+            localStorage.setItem('energy', energy);
+            updateBalanceDisplay();
             clickSound.play();
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
             updateBalanceDisplay();
-        });
-
-        // Play the sound when the user clicks anywhere on the page
-        document.body.addEventListener('click', function () {
-            clickSound.play();
+            setInterval(() => {
+                if (energy < 5000) {
+                    energy = parseInt(energy) + 1;
+                    localStorage.setItem('energy', energy);
+                    updateBalanceDisplay();
+                }
+            }, 18000); // 30 minutes divided by 5000
         });
 
         Telegram.WebApp.ready();
