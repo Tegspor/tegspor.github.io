@@ -77,6 +77,11 @@
             updateBalanceDisplay();
         });
 
+        // Play the sound when the user clicks anywhere on the page
+        document.body.addEventListener('click', function () {
+            clickSound.play();
+        });
+
         Telegram.WebApp.ready();
     </script>
 </body>
