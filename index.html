@@ -5,35 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click the Coin Game</title>
     <style>
-        /* Ваши текущие стили... */
-
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #ffcc70, #ff5dcd);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
         .coin {
-            /* Ваши текущие стили... */
-            position: relative; /* Добавлено для позиционирования всплывающих подсказок */
+            width: 200px;
+            height: 200px;
+            background-image: url('https://www.virtune.com/_next/static/media/bitcoin_logo.11509738.png');
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease;
+            animation: clickAnimation 0.2s ease-in-out;
+            animation-fill-mode: forwards;
         }
-        
-        .popup {
-            position: absolute;
-            left: 50%;
-            bottom: 100%;
-            transform: translate(-50%, 0);
-            background-color: #fff;
-            border-radius: 4px;
-            padding: 5px 10px;
-            font-size: 14px;
-            color: #000;
-            animation: popup 1s ease-out forwards;
+        .coin:active {
+            animation-name: clickActiveAnimation;
         }
-
-        @keyframes popup {
-            0% { opacity: 1; transform: translate(-50%, 0); }
-            100% { opacity: 0; transform: translate(-50%, -50px); }
+        .balance {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+        @keyframes clickAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        @keyframes clickActiveAnimation {
+            0% { transform: scale(1); }
+            100% { transform: scale(0.9); }
         }
     </style>
 </head>
 <body>
     <h1>Click the Coin Game</h1>
-    <div class="coin" onclick="incrementBalance(event)"></div>
+    <div class="coin" onclick="incrementBalance()"></div>
     <div class="balance">Balance: <span id="balance">0</span></div>
 
     <script>
@@ -43,20 +63,10 @@
             document.getElementById('balance').innerText = balance;
         }
 
-        function incrementBalance(event) {
+        function incrementBalance() {
             balance = parseInt(balance) + 1;
             localStorage.setItem('balance', balance);
             updateBalanceDisplay();
-
-            // Создание и анимация всплывающей подсказки
-            const popup = document.createElement('div');
-            popup.classList.add('popup');
-            popup.innerText = '+1';
-            event.currentTarget.appendChild(popup);
-
-            setTimeout(() => {
-                event.currentTarget.removeChild(popup);
-            }, 1000); // Удаление подсказки после 1 секунды
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
