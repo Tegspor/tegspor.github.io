@@ -67,6 +67,11 @@
             balance = parseInt(balance) + 1;
             localStorage.setItem('balance', balance);
             updateBalanceDisplay();
+
+            // Vibrate for 200 milliseconds
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(200);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
