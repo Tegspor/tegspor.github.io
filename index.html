@@ -20,14 +20,14 @@
             color: #fff;
         }
         .coin {
-            width: 150px;
-            height: 150px;
-            background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Bitcoin.svg/1024px-Bitcoin.svg.png');
+            width: 200px;
+            height: 200px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/69/Bitcoin.svg');
             background-size: cover;
             background-position: center;
             cursor: pointer;
             border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
         .balance {
             margin-top: 20px;
@@ -52,6 +52,11 @@
             balance = parseInt(balance) + 1;
             localStorage.setItem('balance', balance);
             updateBalanceDisplay();
+
+            // Добавляем тактильный отклик для iPhone
+            if (window.navigator.vibrate) {
+                window.navigator.vibrate(200);
+            }
         }
 
         document.addEventListener('DOMContentLoaded', (event) => {
