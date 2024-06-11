@@ -5,7 +5,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Click the Coin Game</title>
     <style>
-        /* ... ваш CSS код ... */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: radial-gradient(circle at center, orange, black);
+        }
+        h1 {
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        .coin {
+            width: 250px;
+            height: 250px;
+            background-image: url('https://www.virtune.com/_next/static/media/bitcoin_logo.11509738.png');
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            border-radius: 50%;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: transform 0.1s ease;
+            animation: clickAnimation 0.2s ease-in-out;
+            animation-fill-mode: forwards;
+        }
+        .coin:active {
+            animation-name: clickActiveAnimation;
+        }
+        .balance {
+            margin-top: 20px;
+            font-size: 24px;
+            color: #fff;
+        }
+        @keyframes clickAnimation {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.9); }
+            100% { transform: scale(1); }
+        }
+        @keyframes clickActiveAnimation {
+            0% { transform: scale(1); }
+            100% { transform: scale(0.9); }
+        }
     </style>
 </head>
 <body>
