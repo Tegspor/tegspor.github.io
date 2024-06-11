@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telegram Mini App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f7f7f7;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Telegram Mini App</h1>
+    <button onclick="sendCommand('start')">Start</button>
+    <button onclick="sendCommand('help')">Help</button>
+    <button onclick="sendCommand('about')">About</button>
+    <button onclick="sendCommand('time')">Time</button>
+    <button onclick="sendCommand('joke')">Joke</button>
+
+    <script>
+        function sendCommand(command) {
+            const botToken = '7378535391:AAEgs6PonZuj06pwDJ0ic0COVHNxrPhld10';
+            const chatId = Telegram.WebApp.initDataUnsafe.user.id;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: `/${command}`
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert(`Command /${command} sent successfully!`);
+                } else {
+                    alert('Error sending command.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error sending command.');
+            });
+        }
+
+        Telegram.WebApp.ready();
+    </script>
+</body>
+</html>
