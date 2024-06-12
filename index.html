@@ -21,6 +21,11 @@
             margin-bottom: 20px;
             text-align: center;
         }
+        #balance {
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
         #calculator {
             width: 90%;
             max-width: 320px;
@@ -72,6 +77,7 @@
 </head>
 <body>
     <div id="random-number">0</div>
+    <div id="balance">Баланс: 0 монет</div>
     <div id="calculator">
         <div id="display"></div>
         <div id="buttons">
@@ -97,9 +103,15 @@
     <script>
         let display = document.getElementById('display');
         let randomNumberDisplay = document.getElementById('random-number');
+        let balanceDisplay = document.getElementById('balance');
         let buttons = Array.from(document.getElementsByTagName('button'));
         let correctSound = new Audio('https://raw.githubusercontent.com/Tegspor/tegspor.github.io/main/506052__mellau__button-click-3.wav');
         let balance = 0;
+
+        function updateBalance(amount) {
+            balance += amount;
+            balanceDisplay.innerText = `Баланс: ${balance} монет`;
+        }
 
         function getRandomMultiplier() {
             return Math.floor(Math.random() * 10) + 1;
@@ -127,7 +139,8 @@
             
             if (userAnswer === expected) {
                 randomNumberDisplay.style.color = 'green';
-                balance += Math.floor(Math.random() * 3) + 3;
+                let reward = Math.floor(Math.random() * 3) + 3;
+                updateBalance(reward);
                 correctSound.play();
             } else {
                 randomNumberDisplay.style.color = 'red';
