@@ -28,13 +28,14 @@
             left: 20px;
         }
         #calculator {
-            width: 90%;
-            max-width: 320px;
+            width: 80%;
+            max-width: 300px;
             background-color: #333;
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
+            margin-top: 50px;
         }
         #display {
             width: 100%;
@@ -87,12 +88,28 @@
             margin-top: 50px;
             text-align: center;
         }
+        #section-buttons {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+        }
+        #section-buttons button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
-    <button id="show-game">Игра</button>
-    <button id="show-info">Информация</button>
+    <div id="section-buttons">
+        <button id="show-game"><i class="fas fa-gamepad"></i></button>
+        <button id="show-info"><i class="fas fa-info-circle"></i></button>
+    </div>
 
     <section id="game-section">
         <div id="balance">$CALC: 0</div>
