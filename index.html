@@ -23,8 +23,9 @@
         }
         #balance {
             font-size: 1.5em;
-            margin-bottom: 20px;
-            text-align: center;
+            position: absolute;
+            top: 20px;
+            left: 20px;
         }
         #calculator {
             width: 90%;
@@ -76,8 +77,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="balance">$CALC: 0</div>
     <div id="random-number">0</div>
-    <div id="balance">Баланс: 0 монет</div>
     <div id="calculator">
         <div id="display"></div>
         <div id="buttons">
@@ -110,7 +111,7 @@
 
         function updateBalance(amount) {
             balance += amount;
-            balanceDisplay.innerText = `Баланс: ${balance} монет`;
+            balanceDisplay.innerText = `$CALC: ${balance}`;
         }
 
         function getRandomMultiplier() {
@@ -124,9 +125,6 @@
         function showRandomNumber() {
             const randomNumber = getRandomNumber();
             randomNumberDisplay.innerText = randomNumber;
-            setTimeout(() => {
-                checkAnswer(randomNumber);
-            }, 7000);
         }
 
         function checkAnswer(expected) {
@@ -156,11 +154,7 @@
             button.addEventListener('click', (e) => {
                 switch(e.target.innerText){
                     case '=':
-                        try {
-                            display.innerText = eval(display.innerText) || "";
-                        } catch {
-                            display.innerText = "Error";
-                        }
+                        checkAnswer(parseInt(randomNumberDisplay.innerText));
                         break;
                     case 'AC':
                         display.innerText = '';
