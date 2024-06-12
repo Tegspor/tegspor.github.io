@@ -121,6 +121,7 @@
         function updateBalance(amount) {
             balance += amount;
             balanceDisplay.innerText = `$CALC: ${balance}`;
+            localStorage.setItem('balance', balance);
         }
 
         function getRandomMultiplier() {
@@ -197,8 +198,16 @@
                 }
             });
         });
-
-        showRandomNumber();
+        
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // проверяем, есть ли сохраненный баланс
+            const savedBalance = localStorage.getItem('balance');
+            if (savedBalance) {
+                balance = Number(savedBalance); // если есть, используем его
+                balanceDisplay.innerText = `$CALC: ${balance}`;
+            }
+            showRandomNumber();
+        });
     </script>
 </body>
 </html>
