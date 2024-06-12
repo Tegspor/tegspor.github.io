@@ -45,6 +45,7 @@
             display: flex;
             align-items: center;
             justify-content: flex-end;
+            overflow: hidden;
         }
         #buttons {
             display: grid;
@@ -119,7 +120,7 @@
         function checkAnswer(expected) {
             let userAnswer;
             try {
-                userAnswer = eval(display.value);
+                userAnswer = eval(display.innerText);
             } catch {
                 userAnswer = NaN;
             }
@@ -133,7 +134,7 @@
             }
             setTimeout(() => {
                 randomNumberDisplay.style.color = 'white';
-                display.value = '';
+                display.innerText = '';
                 showRandomNumber();
             }, 1000);
         }
@@ -142,13 +143,17 @@
             button.addEventListener('click', (e) => {
                 switch(e.target.innerText){
                     case '=':
-                        display.value = eval(display.value) || "";
+                        try {
+                            display.innerText = eval(display.innerText) || "";
+                        } catch {
+                            display.innerText = "Error";
+                        }
                         break;
                     case 'AC':
-                        display.value = '';
+                        display.innerText = '';
                         break;
                     default:
-                        display.value += e.target.innerText;
+                        display.innerText += e.target.innerText;
                 }
             });
         });
