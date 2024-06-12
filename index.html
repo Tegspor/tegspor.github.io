@@ -24,6 +24,7 @@
             left: 20px;
         }
         #increase-amount {
+            display: none; /* Изначально скрываем элемент */
             position: absolute;
             top: 0;
             left: 100%;
@@ -41,6 +42,11 @@
                 opacity: 0;
                 transform: translateY(-50px);
             }
+        }
+        #random-number {
+            font-size: 2em; /* Увеличиваем размер шрифта */
+            text-align: center; /* Выравниваем текст по центру */
+            margin: 20px 0; /* Добавляем отступы сверху и снизу */
         }
         #calculator {
             width: 100%;
@@ -102,80 +108,37 @@
             position: absolute;
             bottom: 0;
         }
-        #info-section, #game-section {
-            display: none;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #game-section {
-            display: block; /* Показываем секцию с игрой по умолчанию */
-        }
-        #info-section {
-            text-align: center;
-        }
-        #section-buttons {
-            position: fixed;
-            bottom: 20px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            gap: 10px;
-        }
-        #section-buttons button {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            font-size: 24px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="section-buttons">
-        <button id="show-game"><i class="fas fa-gamepad"></i></button>
-        <button id="show-info"><i class="fas fa-info-circle"></i></button>
+    <div id="balance-container">
+        <div id="balance"><img src="path_to_your_coin_image.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
+        <div id="increase-amount">+1 $CALC</div>
     </div>
-
-    <section id="game-section">
-        <div id="balance-container">
-            <div id="balance"><img src="png-transparent-pixel-art-mario-coin-text-rectangle-владыка.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
-            <div id="increase-amount">+1 $CALC</div>
+    <div id="random-number">0</div>
+    <div id="calculator">
+        <div id="display"></div>
+        <div id="buttons">
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>+</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>-</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>*</button>
+            <button>AC</button>
+            <button>0</button>
+            <button>=</button>
+            <button>/</button>
         </div>
-        <div id="random-number">0</div>
-        <div id="calculator">
-            <div id="display"></div>
-            <div id="buttons">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>+</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>-</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>*</button>
-                <button>AC</button>
-                <button>0</button>
-                <button>=</button>
-                <button>/</button>
-            </div>
-        </div>
-        <div id="timer"></div>
-    </section>
-
-    <section id="info-section">
-        <h1>О проекте</h1>
-        <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
-        <h2>Как играть</h2>
-        <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
-    </section>
+    </div>
+    <div id="timer"></div>
 
     <script>
         let display = document.getElementById('display');
@@ -199,33 +162,13 @@
             }, 2000); // Время анимации должно совпадать с CSS
         }
 
-        function getRandomMultiplier() {
-            return Math.floor(Math.random() * 10) + 1;
-        }
-
         function getRandomNumber() {
-            return getRandomMultiplier() * getRandomMultiplier();
-        }
-
-        function updateTimer() {
-            let timerElement = document.getElementById('timer');
-            let width = 100;
-            timer = setInterval(() => {
-                if (width <= 0) {
-                    clearInterval(timer);
-                    showRandomNumber();
-                } else {
-                    width--;
-                    timerElement.style.width = width + '%';
-                }
-            }, 70);
+            return Math.floor(Math.random() * 10 + 1) * Math.floor(Math.random() * 10 + 1);
         }
 
         function showRandomNumber() {
-            clearInterval(timer);
             const randomNumber = getRandomNumber();
             randomNumberDisplay.innerText = randomNumber;
-            updateTimer();
         }
 
         function checkAnswer(expected) {
@@ -241,10 +184,9 @@
             }
             
             if (userAnswer === expected) {
-                clearInterval(timer);
                 randomNumberDisplay.style.color = 'green';
                 updateBalance(1); // Теперь за правильный ответ начисляется 1 монета
-                correctSound.play();
+                correctSound.play().catch(e => console.error("Ошибка воспроизведения звука:", e)); // Обработка ошибки воспроизведения
             } else {
                 randomNumberDisplay.style.color = 'red';
             }
@@ -255,7 +197,7 @@
             }, 1000);
         }
 
-        buttons.map(button => {
+        buttons.forEach(button => {
             button.addEventListener('click', (e) => {
                 switch(e.target.innerText){
                     case '=':
@@ -270,23 +212,13 @@
             });
         });
 
-        document.addEventListener('DOMContentLoaded', (event) => {
+        document.addEventListener('DOMContentLoaded', () => {
             const savedBalance = localStorage.getItem('balance');
             if (savedBalance) {
                 balance = Number(savedBalance);
                 balanceDisplay.innerText = balance;
             }
             showRandomNumber();
-        });
-
-        document.getElementById('show-game').addEventListener('click', function() {
-            document.getElementById('game-section').style.display = 'block';
-            document.getElementById('info-section').style.display = 'none';
-        });
-
-        document.getElementById('show-info').addEventListener('click', function() {
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'block';
         });
     </script>
 </body>
