@@ -28,7 +28,7 @@
             left: 20px;
         }
         #calculator {
-            width: 80%;
+            width: 100%;
             max-width: 300px;
             background-color: #333;
             border-radius: 10px;
@@ -36,6 +36,7 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
             margin-top: 20px;
+            box-sizing: border-box;
         }
         #display {
             width: 100%;
@@ -72,6 +73,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 100%;
+            box-sizing: border-box;
         }
         button:active {
             background-color: #888;
