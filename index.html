@@ -16,6 +16,20 @@
             font-family: 'Press Start 2P', cursive;
             color: white;
         }
+        #loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: black;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            font-size: 2em;
+            color: white;
+        }
         #balance-container {
             position: relative;
             font-size: 1.5em;
@@ -146,6 +160,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div id="loading-screen">Загрузка...</div>
     <div id="section-buttons">
         <button id="show-game">&#x1F3AE;</button>
         <button id="show-info">&#x2139;</button>
@@ -236,34 +251,18 @@
         }
 
         function checkAnswer(expected) {
-            let userAnswer;
-            try {
-                userAnswer = eval(display.innerText);
-                if (!/[+\-*/]/.test(display.innerText) || display.innerText === expected.toString()) {
-                    alert("Используйте математическую операцию для получения числа!");
-                    return;
-                }
-            } catch {
-                userAnswer = NaN;
-            }
-            
-            if (userAnswer === expected) {
-                randomNumberDisplay.style.color = 'green';
+            if (eval(display.innerText) === expected) {
+                correctSound.play();
                 updateBalance(1);
-                correctSound.play().catch(e => console.error("Ошибка воспроизведения звука:", e));
-            } else {
-                randomNumberDisplay.style.color = 'red';
-            }
-            setTimeout(() => {
-                randomNumberDisplay.style.color = 'white';
-                display.innerText = '';
                 showRandomNumber();
-            }, 1000);
+            } else {
+                alert('Неправильный ответ. Попробуйте еще раз!');
+            }
+            display.innerText = '';
         }
 
         buttons.forEach(button => {
             button.addEventListener('click', (e) => {
-                e.stopPropagation(); // предотвращаем всплытие события
                 switch(e.target.innerText){
                     case '=':
                         checkAnswer(parseInt(randomNumberDisplay.innerText));
@@ -296,6 +295,10 @@
                 balanceDisplay.innerText = balance;
             }
             showRandomNumber();
+            // Hide loading screen after 2 seconds
+            setTimeout(() => {
+                document.getElementById('loading-screen').style.display = 'none';
+            }, 2000);
         });
     </script>
 </body>
