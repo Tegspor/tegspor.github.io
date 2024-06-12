@@ -80,34 +80,47 @@
             position: absolute;
             bottom: 0;
         }
+        #info-section {
+            margin-top: 50px;
+            text-align: center;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="balance">$CALC: 0</div>
-    <div id="random-number">0</div>
-    <div id="calculator">
-        <div id="display"></div>
-        <div id="buttons">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>+</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>-</button>
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>*</button>
-            <button>AC</button>
-            <button>0</button>
-            <button>=</button>
-            <button>/</button>
+    <section id="game-section">
+        <div id="balance">$CALC: 0</div>
+        <div id="random-number">0</div>
+        <div id="calculator">
+            <div id="display"></div>
+            <div id="buttons">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>+</button>
+                <button>4</button>
+                <button>5</button>
+                <button>6</button>
+                <button>-</button>
+                <button>7</button>
+                <button>8</button>
+                <button>9</button>
+                <button>*</button>
+                <button>AC</button>
+                <button>0</button>
+                <button>=</button>
+                <button>/</button>
+            </div>
         </div>
-    </div>
-    <div id="timer"></div>
+        <div id="timer"></div>
+    </section>
+
+    <section id="info-section">
+        <h1>О проекте</h1>
+        <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
+        <h2>Как играть</h2>
+        <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
+    </section>
 
     <script>
         let display = document.getElementById('display');
@@ -121,7 +134,7 @@
         function updateBalance(amount) {
             balance += amount;
             balanceDisplay.innerText = `$CALC: ${balance}`;
-            localStorage.setItem('balance', balance);
+            localStorage.setItem('balance', balance); // сохраняем баланс в localStorage
         }
 
         function getRandomMultiplier() {
@@ -198,7 +211,8 @@
                 }
             });
         });
-        
+
+        // при загрузке страницы
         document.addEventListener('DOMContentLoaded', (event) => {
             // проверяем, есть ли сохраненный баланс
             const savedBalance = localStorage.getItem('balance');
