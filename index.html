@@ -16,24 +16,12 @@
             font-family: 'Press Start 2P', cursive;
             color: white;
         }
-        #random-number {
-            font-size: 2em;
-            margin-bottom: 20px;
-            text-align: center;
-        }
         #balance-container {
             position: relative;
             font-size: 1.5em;
             position: absolute;
             top: 20px;
             left: 20px;
-        }
-        #balance {
-            transition: transform 0.3s;
-        }
-        #balance-value {
-            display: inline-block;
-            transition: transform 0.3s;
         }
         #increase-amount {
             position: absolute;
@@ -42,16 +30,16 @@
             white-space: nowrap;
             font-size: 0.5em;
             color: lime;
-            animation: fadeOut 1s forwards;
+            animation: flyAndFade 2s forwards;
         }
-        @keyframes fadeOut {
+        @keyframes flyAndFade {
             0% {
                 opacity: 1;
-                transform: translateX(10px);
+                transform: translateY(0);
             }
             100% {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateY(-50px);
             }
         }
         #calculator {
@@ -145,7 +133,6 @@
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 <body>
     <div id="section-buttons">
@@ -155,8 +142,8 @@
 
     <section id="game-section">
         <div id="balance-container">
-            <div id="balance">$CALC: <span id="balance-value">0</span></div>
-            <div id="increase-amount"></div>
+            <div id="balance"><img src="path_to_your_coin_image.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
+            <div id="increase-amount">+1 $CALC</div>
         </div>
         <div id="random-number">0</div>
         <div id="calculator">
@@ -193,25 +180,23 @@
     <script>
         let display = document.getElementById('display');
         let randomNumberDisplay = document.getElementById('random-number');
-        let balanceDisplay = document.getElementById('balance-value'); // Изменено на balance-value
+        let balanceDisplay = document.getElementById('balance-value');
         let increaseAmountDisplay = document.getElementById('increase-amount');
         let buttons = Array.from(document.getElementsByTagName('button'));
-        let correctSound = new Audio('https://raw.githubusercontent.com/Tegspor/tegspor.github.io/main/506052__mellau__button-click-3.wav');
+        let correctSound = new Audio('tegspor.github.io/506052__mellau__button-click-3.wav');
         let balance = 0;
         let timer;
 
         function updateBalance(amount) {
             balance += amount;
-            balanceDisplay.innerText = balance; // Обновляем только число
-            localStorage.setItem('balance', balance); // сохраняем баланс в localStorage
+            balanceDisplay.innerText = balance;
+            localStorage.setItem('balance', balance);
 
-            // Эффект увеличения только для числа
-            balanceDisplay.style.transform = 'scale(1.2)';
-            increaseAmountDisplay.innerText = `+${amount}`;
+            increaseAmountDisplay.innerText = `+${amount} $CALC`;
+            increaseAmountDisplay.style.display = 'inline'; // Показываем надпись
             setTimeout(() => {
-                balanceDisplay.style.transform = 'scale(1)';
-                increaseAmountDisplay.innerText = '';
-            }, 1000);
+                increaseAmountDisplay.style.display = 'none'; // Скрываем надпись после анимации
+            }, 2000); // Время анимации должно совпадать с CSS
         }
 
         function getRandomMultiplier() {
@@ -232,13 +217,6 @@
                 } else {
                     width--;
                     timerElement.style.width = width + '%';
-                    if (width <= 50 && width > 20) {
-                        timerElement.style.backgroundColor = 'yellow';
-                    } else if (width <= 20) {
-                        timerElement.style.backgroundColor = 'red';
-                    } else {
-                        timerElement.style.backgroundColor = 'green';
-                    }
                 }
             }, 70);
         }
@@ -254,7 +232,6 @@
             let userAnswer;
             try {
                 userAnswer = eval(display.innerText);
-                // Проверяем, содержит ли введенное выражение математические операции
                 if (!/[+\-*/]/.test(display.innerText) || display.innerText === expected.toString()) {
                     alert("Используйте математическую операцию для получения числа!");
                     return;
@@ -266,8 +243,7 @@
             if (userAnswer === expected) {
                 clearInterval(timer);
                 randomNumberDisplay.style.color = 'green';
-                let reward = Math.floor(Math.random() * 3) + 3;
-                updateBalance(reward);
+                updateBalance(1); // Теперь за правильный ответ начисляется 1 монета
                 correctSound.play();
             } else {
                 randomNumberDisplay.style.color = 'red';
@@ -294,12 +270,10 @@
             });
         });
 
-        // при загрузке страницы
         document.addEventListener('DOMContentLoaded', (event) => {
-            // проверяем, есть ли сохраненный баланс
             const savedBalance = localStorage.getItem('balance');
             if (savedBalance) {
-                balance = Number(savedBalance); // если есть, используем его
+                balance = Number(savedBalance);
                 balanceDisplay.innerText = balance;
             }
             showRandomNumber();
