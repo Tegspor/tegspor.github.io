@@ -14,9 +14,10 @@
             overflow: hidden;
         }
         #calculator {
-            width: 200px;
+            width: 90%;
+            max-width: 300px;
             background-color: #fff;
-            border-radius: 5px;
+            border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
         }
@@ -26,7 +27,8 @@
             text-align: right;
             margin-bottom: 10px;
             border: none;
-            font-size: 24px;
+            font-size: 1.5em;
+            padding-right: 10px;
         }
         #buttons {
             display: grid;
@@ -34,11 +36,15 @@
             gap: 10px;
         }
         button {
-            height: 40px;
-            font-size: 18px;
+            height: 60px;
+            font-size: 1.2em;
             border: none;
             border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f0f0f0;
+        }
+        button:active {
+            background-color: #d0d0d0;
         }
     </style>
 </head>
