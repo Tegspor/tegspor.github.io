@@ -108,37 +108,77 @@
             position: absolute;
             bottom: 0;
         }
+        #section-buttons {
+            position: fixed;
+            bottom: 20px;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+            gap: 10px;
+        }
+        #section-buttons button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #game-section, #info-section {
+            display: none;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #game-section {
+            display: block; /* Показываем секцию с игрой по умолчанию */
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="balance-container">
-        <div id="balance"><img src="png-transparent-pixel-art-mario-coin-text-rectangle-владыка.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
-        <div id="increase-amount">+1 $CALC</div>
+    <div id="section-buttons">
+        <button id="show-game">Игра</button>
+        <button id="show-info">Инфо</button>
     </div>
-    <div id="random-number">0</div>
-    <div id="calculator">
-        <div id="display"></div>
-        <div id="buttons">
-            <button>1</button>
-            <button>2</button>
-            <button>3</button>
-            <button>+</button>
-            <button>4</button>
-            <button>5</button>
-            <button>6</button>
-            <button>-</button>
-            <button>7</button>
-            <button>8</button>
-            <button>9</button>
-            <button>*</button>
-            <button>AC</button>
-            <button>0</button>
-            <button>=</button>
-            <button>/</button>
+
+    <section id="game-section">
+        <div id="balance-container">
+            <div id="balance"><img src="png-transparent-pixel-art-mario-coin-text-rectangle-владыка.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
+            <div id="increase-amount">+1 $CALC</div>
         </div>
-    </div>
-    <div id="timer"></div>
+        <div id="random-number">0</div>
+        <div id="calculator">
+            <div id="display"></div>
+            <div id="buttons">
+                <button>1</button>
+                <button>2</button>
+                <button>3</button>
+                <button>+</button>
+                <button>4</button>
+                <button>5</button>
+                <button>6</button>
+                <button>-</button>
+                <button>7</button>
+                <button>8</button>
+                <button>9</button>
+                <button>*</button>
+                <button>AC</button>
+                <button>0</button>
+                <button>=</button>
+                <button>/</button>
+            </div>
+        </div>
+        <div id="timer"></div>
+    </section>
+
+    <section id="info-section">
+        <h1>О проекте</h1>
+        <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
+        <h2>Как играть</h2>
+        <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
+    </section>
 
     <script>
         let display = document.getElementById('display');
@@ -169,6 +209,22 @@
         function showRandomNumber() {
             const randomNumber = getRandomNumber();
             randomNumberDisplay.innerText = randomNumber;
+            updateTimer();
+        }
+
+        function updateTimer() {
+            clearInterval(timer);
+            let timerElement = document.getElementById('timer');
+            let width = 100;
+            timer = setInterval(() => {
+                if (width <= 0) {
+                    clearInterval(timer);
+                    showRandomNumber();
+                } else {
+                    width--;
+                    timerElement.style.width = width + '%';
+                }
+            }, 100); // Скорость таймера
         }
 
         function checkAnswer(expected) {
@@ -210,6 +266,16 @@
                         display.innerText += e.target.innerText;
                 }
             });
+        });
+
+        document.getElementById('show-game').addEventListener('click', () => {
+            document.getElementById('game-section').style.display = 'block';
+            document.getElementById('info-section').style.display = 'none';
+        });
+
+        document.getElementById('show-info').addEventListener('click', () => {
+            document.getElementById('game-section').style.display = 'none';
+            document.getElementById('info-section').style.display = 'block';
         });
 
         document.addEventListener('DOMContentLoaded', () => {
