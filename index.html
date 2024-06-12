@@ -24,7 +24,7 @@
             left: 20px;
         }
         #increase-amount {
-            display: none; /* Изначально скрываем элемент */
+            display: none;
             position: absolute;
             top: 0;
             left: 100%;
@@ -44,9 +44,9 @@
             }
         }
         #random-number {
-            font-size: 2em; /* Увеличиваем размер шрифта */
-            text-align: center; /* Выравниваем текст по центру */
-            margin: 20px 0; /* Добавляем отступы сверху и снизу */
+            font-size: 2em;
+            text-align: center;
+            margin: 20px 0;
         }
         #calculator {
             width: 100%;
@@ -115,6 +115,9 @@
             justify-content: center;
             width: 100%;
             gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 10px;
         }
         #section-buttons button {
             width: 50px;
@@ -124,11 +127,11 @@
             align-items: center;
             justify-content: center;
             margin: 0 5px;
-            background-color: #444;
+            background-color: rgba(68, 68, 68, 0.8);
             color: #fff;
             border: none;
             cursor: pointer;
-            user-select: none; /* Отключаем выделение текста на кнопках */
+            user-select: none;
         }
         #game-section, #info-section {
             display: none;
@@ -137,7 +140,7 @@
             box-sizing: border-box;
         }
         #game-section {
-            display: block; /* Показываем секцию с игрой по умолчанию */
+            display: block;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -150,7 +153,7 @@
 
     <section id="game-section">
         <div id="balance-container">
-            <div id="balance"><img src="png-transparent-pixel-art-mario-coin-text-rectangle-владыка.png" alt="Coin" style="width: 20px; height: 20px;"> <span id="balance-value">0</span></div>
+            <div id="balance"><img src="https://tegspor.github.io/coin.png" alt="Coin" style="height: 1em; width: auto;"> <span id="balance-value">0</span></div>
             <div id="increase-amount">+1 $CALC</div>
         </div>
         <div id="random-number">0</div>
@@ -190,8 +193,8 @@
         let randomNumberDisplay = document.getElementById('random-number');
         let balanceDisplay = document.getElementById('balance-value');
         let increaseAmountDisplay = document.getElementById('increase-amount');
-        let buttons = Array.from(document.getElementsByTagName('button'));
-        let correctSound = new Audio('tegspor.github.io/506052__mellau__button-click-3.wav');
+        let buttons = Array.from(document.getElementById('buttons').getElementsByTagName('button'));
+        let correctSound = new Audio('https://tegspor.github.io/506052__mellau__button-click-3.wav');
         let balance = 0;
         let timer;
 
@@ -201,10 +204,10 @@
             localStorage.setItem('balance', balance);
 
             increaseAmountDisplay.innerText = `+${amount} $CALC`;
-            increaseAmountDisplay.style.display = 'inline'; // Показываем надпись
+            increaseAmountDisplay.style.display = 'inline';
             setTimeout(() => {
-                increaseAmountDisplay.style.display = 'none'; // Скрываем надпись после анимации
-            }, 2000); // Время анимации должно совпадать с CSS
+                increaseAmountDisplay.style.display = 'none';
+            }, 2000);
         }
 
         function getRandomNumber() {
@@ -229,7 +232,7 @@
                     width--;
                     timerElement.style.width = width + '%';
                 }
-            }, 100); // Скорость таймера
+            }, 100);
         }
 
         function checkAnswer(expected) {
@@ -246,8 +249,8 @@
             
             if (userAnswer === expected) {
                 randomNumberDisplay.style.color = 'green';
-                updateBalance(1); // Теперь за правильный ответ начисляется 1 монета
-                correctSound.play().catch(e => console.error("Ошибка воспроизведения звука:", e)); // Обработка ошибки воспроизведения
+                updateBalance(1);
+                correctSound.play().catch(e => console.error("Ошибка воспроизведения звука:", e));
             } else {
                 randomNumberDisplay.style.color = 'red';
             }
@@ -260,6 +263,7 @@
 
         buttons.forEach(button => {
             button.addEventListener('click', (e) => {
+                e.stopPropagation(); // предотвращаем всплытие события
                 switch(e.target.innerText){
                     case '=':
                         checkAnswer(parseInt(randomNumberDisplay.innerText));
@@ -273,12 +277,14 @@
             });
         });
 
-        document.getElementById('show-game').addEventListener('click', () => {
+        document.getElementById('show-game').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('game-section').style.display = 'block';
             document.getElementById('info-section').style.display = 'none';
         });
 
-        document.getElementById('show-info').addEventListener('click', () => {
+        document.getElementById('show-info').addEventListener('click', (e) => {
+            e.stopPropagation();
             document.getElementById('game-section').style.display = 'none';
             document.getElementById('info-section').style.display = 'block';
         });
