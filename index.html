@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Calculator Game</title>
+    <title>Pixel 3D Calculator Game</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <style>
         body {
@@ -12,15 +12,16 @@
             margin: 0;
             background: radial-gradient(circle at center, blue, black);
             overflow: hidden;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Press Start 2P', cursive;
         }
         #calculator {
             width: 90%;
             max-width: 320px;
-            background-color: #f9f9f9;
+            background-color: #333;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transform-style: preserve-3d;
         }
         #display {
             width: 100%;
@@ -32,7 +33,11 @@
             padding-right: 10px;
             box-sizing: border-box;
             border-radius: 5px;
-            background-color: #e0e0e0;
+            background-color: #1b1b1b;
+            color: #0f0;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
         }
         #buttons {
             display: grid;
@@ -45,18 +50,28 @@
             border: none;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #ffffff;
+            background-color: #444;
+            color: #fff;
             transition: background-color 0.3s, transform 0.1s;
+            transform-style: preserve-3d;
         }
         button:active {
-            background-color: #d0d0d0;
-            transform: scale(0.95);
+            background-color: #888;
+            transform: scale(0.95) translateZ(-10px);
+        }
+        .hidden {
+            visibility: hidden;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
         }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="calculator">
-        <input type="text" id="display" disabled>
+        <div id="display"></div>
         <div id="buttons">
             <button>1</button>
             <button>2</button>
@@ -80,15 +95,49 @@
     <script>
         let display = document.getElementById('display');
         let buttons = Array.from(document.getElementsByTagName('button'));
-        let clickSound = new Audio('https://raw.githubusercontent.com/Tegspor/tegspor.github.io/main/506052__mellau__button-click-3.wav');
+        let correctSound = new Audio('https://raw.githubusercontent.com/Tegspor/tegspor.github.io/main/506052__mellau__button-click-3.wav');
+        let balance = 0;
+
+        function getRandomMultiplier() {
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function getRandomNumber() {
+            return getRandomMultiplier() * getRandomMultiplier();
+        }
+
+        function showRandomNumber() {
+            const randomNumber = getRandomNumber();
+            display.innerText = randomNumber;
+            display.classList.remove('hidden');
+            setTimeout(() => {
+                checkAnswer(randomNumber);
+            }, 7000);
+        }
+
+        function checkAnswer(expected) {
+            let userAnswer = parseInt(display.value, 10);
+            if (userAnswer === expected) {
+                display.style.color = 'green';
+                balance += Math.floor(Math.random() * 3) + 3;
+                correctSound.play();
+            } else {
+                display.style.color = 'red';
+            }
+            setTimeout(() => {
+                display.style.color = '#0f0';
+                display.value = '';
+                display.classList.add('hidden');
+                showRandomNumber();
+            }, 1000);
+        }
 
         buttons.map(button => {
             button.addEventListener('click', (e) => {
                 switch(e.target.innerText){
                     case '=':
-                        try{
+                        try {
                             display.value = eval(display.value);
-                            clickSound.play();
                         } catch {
                             display.value = "Error";
                         }
@@ -99,8 +148,10 @@
                     default:
                         display.value += e.target.innerText;
                 }
-            })
-        })
+            });
+        });
+
+        showRandomNumber();
     </script>
 </body>
 </html>
