@@ -80,6 +80,9 @@
             position: absolute;
             bottom: 0;
         }
+        #info-section, #game-section {
+            display: none;
+        }
         #info-section {
             margin-top: 50px;
             text-align: center;
@@ -88,6 +91,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
+    <button id="show-game">Игра</button>
+    <button id="show-info">Информация</button>
+
     <section id="game-section">
         <div id="balance">$CALC: 0</div>
         <div id="random-number">0</div>
@@ -221,6 +227,16 @@
                 balanceDisplay.innerText = `$CALC: ${balance}`;
             }
             showRandomNumber();
+        });
+
+        document.getElementById('show-game').addEventListener('click', function() {
+            document.getElementById('game-section').style.display = 'block';
+            document.getElementById('info-section').style.display = 'none';
+        });
+
+        document.getElementById('show-info').addEventListener('click', function() {
+            document.getElementById('game-section').style.display = 'none';
+            document.getElementById('info-section').style.display = 'block';
         });
     </script>
 </body>
