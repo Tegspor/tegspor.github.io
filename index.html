@@ -16,20 +16,6 @@
             font-family: 'Press Start 2P', cursive;
             color: white;
         }
-        #loading-screen {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            font-size: 2em;
-            color: white;
-        }
         #balance-container {
             position: relative;
             font-size: 1.5em;
@@ -147,7 +133,7 @@
             cursor: pointer;
             user-select: none;
         }
-        #game-section, #info-section {
+        #game-section, #info-section, #upgrade-section {
             display: none;
             width: 100%;
             padding: 20px;
@@ -156,14 +142,28 @@
         #game-section {
             display: block;
         }
+        .upgrade-button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #444;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .upgrade-button:hover {
+            background-color: #666;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="loading-screen">Загрузка...</div>
     <div id="section-buttons">
         <button id="show-game">&#x1F3AE;</button>
         <button id="show-info">&#x2139;</button>
+        <button id="show-upgrades">&#x1F4AA;</button>
     </div>
 
     <section id="game-section">
@@ -203,6 +203,14 @@
         <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
     </section>
 
+    <section id="upgrade-section">
+        <h1>Улучшения</h1>
+        <div class="upgrade-button" data-cost="50" data-reward="2">Увеличить доход до +2 CALC за 50 монет</div>
+        <div class="upgrade-button" data-cost="150" data-reward="4">Увеличить доход до +4 CALC за 150 монет</div>
+        <div class="upgrade-button" data-cost="1000" data-reward="6">Увеличить доход до +6 CALC за 1000 монет</div>
+        <div class="upgrade-button" data-cost="5000" data-reward="10">Увеличить доход до +10 CALC за 5000 монет</div>
+    </section>
+
     <script>
         let display = document.getElementById('display');
         let randomNumberDisplay = document.getElementById('random-number');
@@ -212,6 +220,7 @@
         let correctSound = new Audio('https://tegspor.github.io/506052__mellau__button-click-3.wav');
         let balance = 0;
         let timer;
+        let reward = 1;
 
         function updateBalance(amount) {
             balance += amount;
@@ -253,7 +262,7 @@
         function checkAnswer(expected) {
             if (eval(display.innerText) === expected) {
                 correctSound.play();
-                updateBalance(1);
+                updateBalance(reward);
                 showRandomNumber();
             } else {
                 alert('Неправильный ответ. Попробуйте еще раз!');
@@ -280,12 +289,39 @@
             e.stopPropagation();
             document.getElementById('game-section').style.display = 'block';
             document.getElementById('info-section').style.display = 'none';
+            document.getElementById('upgrade-section').style.display = 'none';
         });
 
         document.getElementById('show-info').addEventListener('click', (e) => {
             e.stopPropagation();
             document.getElementById('game-section').style.display = 'none';
             document.getElementById('info-section').style.display = 'block';
+            document.getElementById('upgrade-section').style.display = 'none';
+        });
+
+        document.getElementById('show-upgrades').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('game-section').style.display = 'none';
+            document.getElementById('info-section').style.display = 'none';
+            document.getElementById('upgrade-section').style.display = 'block';
+        });
+
+        document.querySelectorAll('.upgrade-button').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const cost = parseInt(e.target.getAttribute('data-cost'));
+                const newReward = parseInt(e.target.getAttribute('data-reward'));
+                if (confirm(`Вы действительно хотите потратить ${cost} $CALC, чтобы получать +${newReward} $CALC за правильный ответ?`)) {
+                    if (balance >= cost) {
+                        balance -= cost;
+                        reward = newReward;
+                        balanceDisplay.innerText = balance;
+                        localStorage.setItem('balance', balance);
+                        alert(`Теперь вы получаете +${newReward} $CALC за правильный ответ!`);
+                    } else {
+                        alert('Недостаточно монет для улучшения.');
+                    }
+                }
+            });
         });
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -295,10 +331,6 @@
                 balanceDisplay.innerText = balance;
             }
             showRandomNumber();
-            // Hide loading screen after 2 seconds
-            setTimeout(() => {
-                document.getElementById('loading-screen').style.display = 'none';
-            }, 2000);
         });
     </script>
 </body>
