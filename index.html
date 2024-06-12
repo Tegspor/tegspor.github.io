@@ -35,7 +35,6 @@
             padding: 20px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
             transform-style: preserve-3d;
-            margin-top: 50px;
         }
         #display {
             width: 100%;
@@ -100,6 +99,7 @@
             height: 50px;
             border-radius: 50%;
             font-size: 24px;
+            margin: 0 10px;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -244,6 +244,7 @@
                 balanceDisplay.innerText = `$CALC: ${balance}`;
             }
             showRandomNumber();
+            document.getElementById('game-section').style.display = 'block';
         });
 
         document.getElementById('show-game').addEventListener('click', function() {
