@@ -54,6 +54,17 @@
                 transform: translateX(10px);
             }
         }
+        @keyframes shakeNumber {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            20%, 60% {
+                transform: translateX(-5px);
+            }
+            40%, 80% {
+                transform: translateX(5px);
+            }
+        }
         #random-number {
             font-size: 2em;
             text-align: center;
@@ -167,19 +178,22 @@
         .upgrade-button:hover {
             background-color: #666;
         }
+        .upgrade-button:last-child {
+            margin-bottom: 20px;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
     <div id="section-buttons">
-        <button id="show-info">&#x2139;</button>
-        <button id="show-upgrades">&#x1F4AA;</button>
         <button id="show-game">&#x1F3AE;</button>
+        <button id="show-upgrades">&#x1F4AA;</button>
+        <button id="show-info">&#x2139;</button>
     </div>
 
     <section id="game-section">
         <div id="balance-container">
-            <div id="balance"><img src="https://tegspor.github.io/coin.png" alt="Coin" style="height: 1em; width: auto;"> <span id="balance-value">0</span></div>
+            <div id="balance">$CALC <span id="balance-value">0</span></div>
             <div id="increase-amount">+1 $CALC</div>
         </div>
         <div id="random-number">0</div>
@@ -208,18 +222,19 @@
     </section>
 
     <section id="info-section">
-        <h1>О проекте</h1>
+        <h1 style="text-align:center;">О проекте</h1>
         <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
         <h2>Как играть</h2>
         <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
     </section>
 
     <section id="upgrade-section">
-        <h1>Улучшения</h1>
+        <h1 style="text-align:center;">Улучшения</h1>
         <div class="upgrade-button" data-cost="50" data-reward="2">Увеличить доход до +2 CALC за 50 монет</div>
         <div class="upgrade-button" data-cost="150" data-reward="4">Увеличить доход до +4 CALC за 150 монет</div>
         <div class="upgrade-button" data-cost="1000" data-reward="6">Увеличить доход до +6 CALC за 1000 монет</div>
         <div class="upgrade-button" data-cost="5000" data-reward="10">Увеличить доход до +10 CALC за 5000 монет</div>
+        <div class="upgrade-button" data-cost="20000" data-reward="20">Увеличить доход до +20 CALC за 20000 монет</div>
     </section>
 
     <script>
@@ -237,20 +252,21 @@
             balance += amount;
             balanceDisplay.innerText = balance;
             localStorage.setItem('balance', balance);
+            showIncreaseAmount(amount);
+        }
 
+        function showIncreaseAmount(amount) {
             increaseAmountDisplay.innerText = `+${amount} $CALC`;
-            increaseAmountDisplay.style.display = 'inline';
+            increaseAmountDisplay.style.display = 'block';
             setTimeout(() => {
                 increaseAmountDisplay.style.display = 'none';
             }, 2000);
         }
 
-        function getRandomNumber() {
-            return Math.floor(Math.random() * 10 + 10);
-        }
-
         function showRandomNumber() {
-            const randomNumber = getRandomNumber();
+            let min = 10;
+            let max = 99;
+            let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
             randomNumberDisplay.innerText = randomNumber;
             updateTimer();
         }
@@ -278,7 +294,8 @@
                 display.style.color = '#0f0';
             } else {
                 display.style.color = 'red';
-                display.style.animation = 'shake 0.5s';
+                display.innerText = display.innerText.split('').join(' ');
+                display.style.animation = 'shakeNumber 0.5s';
                 setTimeout(() => {
                     display.style.color = '#0f0';
                     display.style.animation = '';
@@ -338,6 +355,7 @@
                         reward = newReward;
                         balanceDisplay.innerText = balance;
                         localStorage.setItem('balance', balance);
+                        localStorage.setItem('reward', reward);
                         alert(`Теперь вы получаете +${newReward} $CALC за правильный ответ!`);
                     } else {
                         alert('Недостаточно монет для улучшения.');
@@ -348,9 +366,13 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             const savedBalance = localStorage.getItem('balance');
+            const savedReward = localStorage.getItem('reward');
             if (savedBalance) {
                 balance = Number(savedBalance);
                 balanceDisplay.innerText = balance;
+            }
+            if (savedReward) {
+                reward = Number(savedReward);
             }
             showRandomNumber();
         });
