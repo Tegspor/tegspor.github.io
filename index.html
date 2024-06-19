@@ -65,6 +65,17 @@
                 transform: translateX(5px);
             }
         }
+        @keyframes inputAnimation {
+            0% {
+                border-bottom: 2px solid #0f0;
+            }
+            50% {
+                border-bottom: 2px solid transparent;
+            }
+            100% {
+                border-bottom: 2px solid #0f0;
+            }
+        }
         #random-number {
             font-size: 2em;
             text-align: center;
@@ -97,6 +108,7 @@
             align-items: center;
             justify-content: flex-end;
             overflow: hidden;
+            animation: inputAnimation 1s infinite;
         }
         #buttons {
             display: grid;
@@ -155,7 +167,7 @@
             cursor: pointer;
             user-select: none;
         }
-        #game-section, #info-section, #upgrade-section, #leaderboard-section {
+        #game-section, #info-section, #leaderboard-section, #upgrade-section {
             display: none;
             width: 100%;
             padding: 20px;
@@ -181,27 +193,37 @@
         .upgrade-button:last-child {
             margin-bottom: 20px;
         }
-        #sound-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            font-size: 24px;
-        }
-        #sound-toggle.muted:before {
-            content: '🔊';
-        }
-        #sound-toggle:before {
-            content: '🔇';
-        }
         .leaderboard-entry {
             display: flex;
             justify-content: space-between;
             padding: 10px;
-            border-bottom: 1px solid #ccc;
+            background-color: #222;
+            margin-bottom: 5px;
+            border-radius: 5px;
         }
-        .leaderboard-entry:last-child {
-            border-bottom: none;
+        .leaderboard-entry:nth-child(even) {
+            background-color: #333;
+        }
+        .leaderboard-entry span {
+            font-size: 1.2em;
+        }
+        #sound-button {
+            font-size: 24px;
+            cursor: pointer;
+            user-select: none;
+        }
+        #sound-button.muted::after {
+            content: " ❌";
+            color: red;
+            animation: fadeOut 0.5s;
+        }
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -212,6 +234,7 @@
         <button id="show-upgrades">&#x1F4AA;</button>
         <button id="show-leaderboard">&#x1F3C6;</button>
         <button id="show-info">&#x2139;</button>
+        <div id="sound-button">&#x1F50A;</div>
     </div>
 
     <section id="game-section">
@@ -242,245 +265,124 @@
             </div>
         </div>
         <div id="timer"></div>
-        <div id="sound-toggle"></div>
     </section>
 
     <section id="info-section">
         <h1 style="text-align:center;">О проекте</h1>
         <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
         <h2>Как играть</h2>
-        <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
+        <ul>
+            <li>Решайте задачи на калькуляторе</li>
+            <li>Получайте за это $CALC</li>
+            <li>Улучшайте свои способности за заработанные очки</li>
+        </ul>
+        <h2>О разработчике</h2>
+        <p>Этот проект разработан талантливой командой энтузиастов.</p>
     </section>
 
     <section id="leaderboard-section">
         <h1 style="text-align:center;">Таблица лидеров</h1>
         <div id="leaderboard">
-            <!-- Leaderboard entries will be dynamically added here -->
+            <div class="leaderboard-entry"><span>1. Player1</span><span>1000 $CALC</span></div>
+            <div class="leaderboard-entry"><span>2. Player2</span><span>800 $CALC</span></div>
+            <div class="leaderboard-entry"><span>3. Player3</span><span>600 $CALC</span></div>
+            <div class="leaderboard-entry"><span>4. Player4</span><span>400 $CALC</span></div>
+            <div class="leaderboard-entry"><span>5. Player5</span><span>200 $CALC</span></div>
         </div>
     </section>
 
     <section id="upgrade-section">
         <h1 style="text-align:center;">Улучшения</h1>
-        <div class="upgrade-button" data-cost="50" data-reward="2">Увеличить доход до +2 CALC за 50 монет</div>
-        <div class="upgrade-button" data-cost="150" data-reward="4">Увеличить доход до +4 CALC за 150 монет</div>
-        <div class="upgrade-button" data-cost="1000" data-reward="6">Увеличить доход до +6 CALC за 1000 монет</div>
-        <div class="upgrade-button" data-cost="5000" data-reward="10">Увеличить доход до +10 CALC за 5000 монет</div>
-        <div class="upgrade-button" data-cost="20000" data-reward="20">Увеличить доход до +20 CALC за 20000 монет</div>
+        <div class="upgrade-button">Улучшение 1 (10 $CALC)</div>
+        <div class="upgrade-button">Улучшение 2 (20 $CALC)</div>
+        <div class="upgrade-button">Улучшение 3 (30 $CALC)</div>
     </section>
 
     <script>
-        let display = document.getElementById('display');
-        let randomNumberDisplay = document.getElementById('random-number');
-        let balanceDisplay = document.getElementById('balance-value');
-        let increaseAmountDisplay = document.getElementById('increase-amount');
-        let buttons = Array.from(document.getElementById('buttons').getElementsByTagName('button'));
-        let correctSound = new Audio('https://tegspor.github.io/506052__mellau__button-click-3.wav');
-        let soundToggle = document.getElementById('sound-toggle');
-        let balance = 0;
-        let timer;
-        let reward = 1;
-        let soundEnabled = true;
-        let userName = prompt("Введите ваше имя:", "User" + Math.floor(Math.random() * 1000));
-
-        function updateBalance(amount) {
-            balance += amount;
-            balanceDisplay.innerText = balance;
-            localStorage.setItem('balance', balance);
-            showIncreaseAmount(amount);
-            updateLeaderboard();
+        // Загрузка имени пользователя из Telegram
+        const username = localStorage.getItem('username') || prompt('Введите ваше имя:');
+        if (!localStorage.getItem('username')) {
+            localStorage.setItem('username', username);
         }
 
-        function showIncreaseAmount(amount) {
-            increaseAmountDisplay.innerText = `+${amount} $CALC`;
-            increaseAmountDisplay.style.display = 'block';
+        // Переменные для звука
+        const soundButton = document.getElementById('sound-button');
+        let isMuted = JSON.parse(localStorage.getItem('isMuted') || 'false');
+
+        const updateSoundButton = () => {
+            if (isMuted) {
+                soundButton.classList.add('muted');
+            } else {
+                soundButton.classList.remove('muted');
+            }
+        };
+
+        updateSoundButton();
+
+        soundButton.addEventListener('click', () => {
+            isMuted = !isMuted;
+            localStorage.setItem('isMuted', JSON.stringify(isMuted));
+            updateSoundButton();
+            if (isMuted) {
+                console.log('Sound Muted');
+            } else {
+                console.log('Sound Unmuted');
+            }
+        });
+
+        // Анимация прибавления к балансу
+        const balanceValue = document.getElementById('balance-value');
+        const increaseAmount = document.getElementById('increase-amount');
+
+        function increaseBalance() {
+            let balance = parseInt(balanceValue.innerText);
+            balance++;
+            balanceValue.innerText = balance;
+            increaseAmount.style.display = 'block';
             setTimeout(() => {
-                increaseAmountDisplay.style.display = 'none';
+                increaseAmount.style.display = 'none';
             }, 2000);
         }
 
-        function showRandomNumber() {
-            let min = 10;
-            let max = 99;
-            let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-            randomNumberDisplay.innerText = randomNumber;
-            updateTimer();
-        }
+        // Анимация строки ввода на экране калькулятора
+        const display = document.getElementById('display');
 
-        function updateTimer() {
-            clearInterval(timer);
-            let timerElement = document.getElementById('timer');
-            let width = 100;
-            timer = setInterval(() => {
-                if (width <= 0) {
-                    clearInterval(timer);
-                    showRandomNumber();
-                } else {
-                    width--;
-                    timerElement.style.width = width + '%';
-                }
-            }, 100);
-        }
+        const shakeDisplay = () => {
+            display.style.animation = 'shake 0.5s';
+            display.addEventListener('animationend', () => {
+                display.style.animation = '';
+            });
+        };
 
-        function checkAnswer(expected) {
-            if (eval(display.innerText) === expected) {
-                if (soundEnabled) {
-                    correctSound.play();
-                }
-                updateBalance(reward);
-                showRandomNumber();
-                display.style.color = '#0f0';
-            } else {
-                display.style.color = 'red';
-                display.innerText = display.innerText.split('').join(' ');
-                display.style.animation = 'shakeNumber 0.5s';
-                setTimeout(() => {
-                    display.style.color = '#0f0';
-                    display.style.animation = '';
-                }, 500);
-            }
-            display.innerText = '';
-        }
-
+        // Логика калькулятора
+        const buttons = Array.from(document.querySelectorAll('button'));
         buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                switch(e.target.innerText){
-                    case '=':
-                        if (/^\d+$/.test(display.innerText)) {
-                            alert('Используйте арифметические операции для получения результата!');
-                            display.innerText = '';
-                        } else {
-                            checkAnswer(parseInt(randomNumberDisplay.innerText));
-                        }
-                        break;
-                    case 'AC':
-                        display.innerText = '';
-                        break;
-                    default:
-                        display.innerText += e.target.innerText;
-                }
-            });
-        });
-
-        document.getElementById('show-game').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'block';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-info').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'block';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-upgrades').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'block';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-leaderboard').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'block';
-            loadLeaderboard();
-        });
-
-        document.querySelectorAll('.upgrade-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const cost = parseInt(e.target.getAttribute('data-cost'));
-                const newReward = parseInt(e.target.getAttribute('data-reward'));
-                if (confirm(`Вы действительно хотите потратить ${cost} $CALC, чтобы получать +${newReward} $CALC за правильный ответ?`)) {
-                    if (balance >= cost) {
-                        balance -= cost;
-                        reward = newReward;
-                        balanceDisplay.innerText = balance;
-                        localStorage.setItem('balance', balance);
-                        localStorage.setItem('reward', reward);
-                        alert(`Теперь вы получаете +${newReward} $CALC за правильный ответ!`);
-                    } else {
-                        alert('Недостаточно монет для улучшения.');
+            button.addEventListener('click', () => {
+                if (button.innerText === 'AC') {
+                    display.innerText = '';
+                    shakeDisplay();
+                } else if (button.innerText === '=') {
+                    try {
+                        display.innerText = eval(display.innerText);
+                    } catch {
+                        display.innerText = 'Error';
                     }
+                } else {
+                    display.innerText += button.innerText;
                 }
             });
         });
 
-        soundToggle.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundToggle.classList.toggle('muted');
-            localStorage.setItem('soundEnabled', soundEnabled);
-        });
+        // Переключение секций
+        const sections = document.querySelectorAll('section');
+        const sectionButtons = document.querySelectorAll('#section-buttons button');
 
-        function loadLeaderboard() {
-            const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-            const leaderboardElement = document.getElementById('leaderboard');
-            leaderboardElement.innerHTML = '';
-            leaderboard.forEach(entry => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'leaderboard-entry';
-                entryElement.innerHTML = `<span>${entry.name}</span><span>${entry.score}</span>`;
-                leaderboardElement.appendChild(entryElement);
+        sectionButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                sections.forEach(section => section.style.display = 'none');
+                sections[index].style.display = 'block';
             });
-        }
-
-        function updateLeaderboard() {
-            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-            const existingUser = leaderboard.find(user => user.name === userName);
-
-            if (existingUser) {
-                existingUser.score = balance;
-            } else {
-                leaderboard.push({name: userName, score: balance});
-            }
-
-            leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedBalance = localStorage.getItem('balance');
-            const savedReward = localStorage.getItem('reward');
-            const savedSoundEnabled = localStorage.getItem('soundEnabled');
-            if (savedBalance) {
-                balance = Number(savedBalance);
-                balanceDisplay.innerText = balance;
-            }
-            if (savedReward) {
-                reward = Number(savedReward);
-            }
-            if (savedSoundEnabled) {
-                soundEnabled = savedSoundEnabled === 'true';
-                if (!soundEnabled) {
-                    soundToggle.classList.add('muted');
-                }
-            }
-            showRandomNumber();
-            updateLeaderboard();
         });
-
-        window.addEventListener('resize', adjustLayout);
-
-        function adjustLayout() {
-            const aspectRatio = window.innerWidth / window.innerHeight;
-            const calculator = document.getElementById('calculator');
-            if (aspectRatio < 0.5) {
-                calculator.style.transform = 'scale(0.8)';
-            } else if (aspectRatio < 0.75) {
-                calculator.style.transform = 'scale(0.9)';
-            } else {
-                calculator.style.transform = 'scale(1)';
-            }
-        }
-
-        adjustLayout();
     </script>
 </body>
 </html>
