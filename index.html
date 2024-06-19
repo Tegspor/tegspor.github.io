@@ -155,7 +155,7 @@
             cursor: pointer;
             user-select: none;
         }
-        #game-section, #info-section, #upgrade-section {
+        #game-section, #info-section, #upgrade-section, #leaderboard-section {
             display: none;
             width: 100%;
             padding: 20px;
@@ -181,6 +181,36 @@
         .upgrade-button:last-child {
             margin-bottom: 20px;
         }
+        #sound-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+        }
+        #sound-toggle:after {
+            content: '🔊';
+            display: block;
+            font-size: 24px;
+            animation: fadeIn 0.3s;
+        }
+        #sound-toggle.muted:after {
+            content: '🔇';
+            text-decoration: line-through;
+            animation: fadeIn 0.3s;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .leaderboard-entry {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+        .leaderboard-entry:last-child {
+            border-bottom: none;
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
@@ -188,6 +218,7 @@
     <div id="section-buttons">
         <button id="show-game">&#x1F3AE;</button>
         <button id="show-upgrades">&#x1F4AA;</button>
+        <button id="show-leaderboard">&#x1F3C6;</button>
         <button id="show-info">&#x2139;</button>
     </div>
 
@@ -219,6 +250,7 @@
             </div>
         </div>
         <div id="timer"></div>
+        <div id="sound-toggle"></div>
     </section>
 
     <section id="info-section">
@@ -226,6 +258,13 @@
         <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
         <h2>Как играть</h2>
         <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
+    </section>
+
+    <section id="leaderboard-section">
+        <h1 style="text-align:center;">Таблица лидеров</h1>
+        <div id="leaderboard">
+            <!-- Leaderboard entries will be dynamically added here -->
+        </div>
     </section>
 
     <section id="upgrade-section">
@@ -244,9 +283,11 @@
         let increaseAmountDisplay = document.getElementById('increase-amount');
         let buttons = Array.from(document.getElementById('buttons').getElementsByTagName('button'));
         let correctSound = new Audio('https://tegspor.github.io/506052__mellau__button-click-3.wav');
+        let soundToggle = document.getElementById('sound-toggle');
         let balance = 0;
         let timer;
         let reward = 1;
+        let soundEnabled = true;
 
         function updateBalance(amount) {
             balance += amount;
@@ -288,7 +329,9 @@
 
         function checkAnswer(expected) {
             if (eval(display.innerText) === expected) {
-                correctSound.play();
+                if (soundEnabled) {
+                    correctSound.play();
+                }
                 updateBalance(reward);
                 showRandomNumber();
                 display.style.color = '#0f0';
@@ -329,6 +372,7 @@
             document.getElementById('game-section').style.display = 'block';
             document.getElementById('info-section').style.display = 'none';
             document.getElementById('upgrade-section').style.display = 'none';
+            document.getElementById('leaderboard-section').style.display = 'none';
         });
 
         document.getElementById('show-info').addEventListener('click', (e) => {
@@ -336,6 +380,7 @@
             document.getElementById('game-section').style.display = 'none';
             document.getElementById('info-section').style.display = 'block';
             document.getElementById('upgrade-section').style.display = 'none';
+            document.getElementById('leaderboard-section').style.display = 'none';
         });
 
         document.getElementById('show-upgrades').addEventListener('click', (e) => {
@@ -343,6 +388,16 @@
             document.getElementById('game-section').style.display = 'none';
             document.getElementById('info-section').style.display = 'none';
             document.getElementById('upgrade-section').style.display = 'block';
+            document.getElementById('leaderboard-section').style.display = 'none';
+        });
+
+        document.getElementById('show-leaderboard').addEventListener('click', (e) => {
+            e.stopPropagation();
+            document.getElementById('game-section').style.display = 'none';
+            document.getElementById('info-section').style.display = 'none';
+            document.getElementById('upgrade-section').style.display = 'none';
+            document.getElementById('leaderboard-section').style.display = 'block';
+            loadLeaderboard();
         });
 
         document.querySelectorAll('.upgrade-button').forEach(button => {
@@ -364,9 +419,39 @@
             });
         });
 
+        soundToggle.addEventListener('click', () => {
+            soundEnabled = !soundEnabled;
+            soundToggle.classList.toggle('muted');
+            localStorage.setItem('soundEnabled', soundEnabled);
+        });
+
+        function loadLeaderboard() {
+            const leaderboard = [
+                {name: 'User1', score: 1000},
+                {name: 'User2', score: 950},
+                {name: 'User3', score: 900},
+                {name: 'User4', score: 850},
+                {name: 'User5', score: 800},
+                {name: 'User6', score: 750},
+                {name: 'User7', score: 700},
+                {name: 'User8', score: 650},
+                {name: 'User9', score: 600},
+                {name: 'User10', score: 550}
+            ];
+            const leaderboardElement = document.getElementById('leaderboard');
+            leaderboardElement.innerHTML = '';
+            leaderboard.forEach(entry => {
+                const entryElement = document.createElement('div');
+                entryElement.className = 'leaderboard-entry';
+                entryElement.innerHTML = `<span>${entry.name}</span><span>${entry.score}</span>`;
+                leaderboardElement.appendChild(entryElement);
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             const savedBalance = localStorage.getItem('balance');
             const savedReward = localStorage.getItem('reward');
+            const savedSoundEnabled = localStorage.getItem('soundEnabled');
             if (savedBalance) {
                 balance = Number(savedBalance);
                 balanceDisplay.innerText = balance;
@@ -374,8 +459,30 @@
             if (savedReward) {
                 reward = Number(savedReward);
             }
+            if (savedSoundEnabled) {
+                soundEnabled = savedSoundEnabled === 'true';
+                if (!soundEnabled) {
+                    soundToggle.classList.add('muted');
+                }
+            }
             showRandomNumber();
         });
+
+        window.addEventListener('resize', adjustLayout);
+
+        function adjustLayout() {
+            const aspectRatio = window.innerWidth / window.innerHeight;
+            const calculator = document.getElementById('calculator');
+            if (aspectRatio < 0.5) {
+                calculator.style.transform = 'scale(0.8)';
+            } else if (aspectRatio < 0.75) {
+                calculator.style.transform = 'scale(0.9)';
+            } else {
+                calculator.style.transform = 'scale(1)';
+            }
+        }
+
+        adjustLayout();
     </script>
 </body>
 </html>
