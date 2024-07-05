@@ -1,486 +1,129 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Pixel 3D Calculator Game</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Интернет-магазин одежды</title>
     <style>
         body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
+            font-family: Arial, sans-serif;
             margin: 0;
-            background: radial-gradient(circle at center, blue, black);
-            overflow: hidden;
-            font-family: 'Press Start 2P', cursive;
-            color: white;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
         }
-        #balance-container {
-            position: relative;
-            font-size: 1.5em;
-            position: absolute;
-            top: 20px;
-            left: 20px;
-        }
-        #increase-amount {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 100%;
-            white-space: nowrap;
-            font-size: 0.5em;
-            color: lime;
-            animation: flyAndFade 2s forwards;
-        }
-        @keyframes flyAndFade {
-            0% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-50px);
-            }
-        }
-        @keyframes shake {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            20%, 60% {
-                transform: translateX(-10px);
-            }
-            40%, 80% {
-                transform: translateX(10px);
-            }
-        }
-        @keyframes shakeNumber {
-            0%, 100% {
-                transform: translateX(0);
-            }
-            20%, 60% {
-                transform: translateX(-5px);
-            }
-            40%, 80% {
-                transform: translateX(5px);
-            }
-        }
-        #random-number {
-            font-size: 2em;
-            text-align: center;
-            margin: 20px 0;
-        }
-        #calculator {
-            width: 100%;
-            max-width: 400px;
-            background-color: #333;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            transform-style: preserve-3d;
-            margin-top: 20px;
-            box-sizing: border-box;
-        }
-        #display {
-            width: 100%;
-            height: 60px;
-            text-align: right;
-            margin-bottom: 20px;
-            border: none;
-            font-size: 2em;
-            padding-right: 10px;
-            box-sizing: border-box;
-            border-radius: 5px;
-            background-color: #1b1b1b;
-            color: #0f0;
-            display: flex;
-            align-items: center;
-            justify-content: flex-end;
-            overflow: hidden;
-        }
-        #buttons {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
-        button {
-            width: 100%;
-            height: 60px;
-            font-size: 1.5em;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #444;
-            color: #fff;
-            transition: background-color 0.3s, transform 0.1s;
-            transform-style: preserve-3d;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-sizing: border-box;
-        }
-        button:active {
-            background-color: #888;
-            transform: scale(0.95) translateZ(-10px);
-        }
-        #timer {
-            height: 10px;
-            width: 100%;
-            background-color: green;
-            position: absolute;
-            bottom: 0;
-        }
-        #section-buttons {
-            position: fixed;
-            bottom: 20px;
-            display: flex;
-            justify-content: center;
-            width: 100%;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 15px;
-            padding: 10px;
-        }
-        #section-buttons button {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            font-size: 24px;
-            align-items: center;
-            justify-content: center;
-            margin: 0 5px;
-            background-color: rgba(68, 68, 68, 0.8);
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            user-select: none;
-        }
-        #game-section, #info-section, #upgrade-section, #leaderboard-section {
-            display: none;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #game-section {
-            display: block;
-        }
-        .upgrade-button {
-            display: block;
+        .container {
             width: 80%;
-            padding: 10px;
-            margin: 10px auto;
-            background-color: #444;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #333;
             color: #fff;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #77d8d8 3px solid;
+        }
+        header a {
+            color: #fff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        .showcase {
+            min-height: 400px;
+            background: url('https://via.placeholder.com/1200x400') no-repeat 0 -400px;
             text-align: center;
-            border-radius: 5px;
-            cursor: pointer;
+            color: #fff;
         }
-        .upgrade-button:hover {
-            background-color: #666;
+        .showcase h1 {
+            margin-top: 100px;
+            font-size: 55px;
+            margin-bottom: 10px;
         }
-        .upgrade-button:last-child {
+        .showcase p {
+            font-size: 20px;
+        }
+        #main {
+            padding: 20px;
+            background: #fff;
+            text-align: center;
+        }
+        #main h1 {
+            font-size: 30px;
+            margin-bottom: 10px;
+        }
+        #main p {
+            font-size: 18px;
             margin-bottom: 20px;
         }
-        #sound-toggle {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            cursor: pointer;
-            font-size: 24px;
-        }
-        #sound-toggle.muted:before {
-            content: '🔊';
-        }
-        #sound-toggle:before {
-            content: '🔇';
-        }
-        .leaderboard-entry {
-            display: flex;
-            justify-content: space-between;
-            padding: 10px;
-            border-bottom: 1px solid #ccc;
-        }
-        .leaderboard-entry:last-child {
-            border-bottom: none;
+        footer {
+            padding: 20px;
+            margin-top: 20px;
+            color: #fff;
+            background-color: #333;
+            text-align: center;
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="section-buttons">
-        <button id="show-game">&#x1F3AE;</button>
-        <button id="show-upgrades">&#x1F4AA;</button>
-        <button id="show-leaderboard">&#x1F3C6;</button>
-        <button id="show-info">&#x2139;</button>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1>Интернет-магазин одежды</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#about">О нас</a></li>
+                    <li><a href="#instructions">Как заказать</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="showcase">
+        <div class="container">
+            <h1>Добро пожаловать в наш магазин!</h1>
+            <p>Лучшие предложения по отличным ценам</p>
+        </div>
+    </section>
+
+    <div id="main" class="container">
+        <section id="about">
+            <h1>О нас</h1>
+            <p>Мы предлагаем широкий ассортимент модной одежды для всех. Наши товары тщательно отбираются, чтобы удовлетворить самые взыскательные вкусы.</p>
+        </section>
+
+        <section id="instructions">
+            <h1>Как заказать</h1>
+            <p>Следуйте этим простым шагам для заказа:</p>
+            <p>1. Написать в мой Telegram: <a href="https://t.me/kseniput">@kseniput</a></p>
+            <p>2. Выбрать категорию товара</p>
+            <p>3. Скинуть ссылку на товар и скрин</p>
+        </section>
     </div>
 
-    <section id="game-section">
-        <div id="balance-container">
-            <div id="balance">$CALC <span id="balance-value">0</span></div>
-            <div id="increase-amount">+1 $CALC</div>
-        </div>
-        <div id="random-number">0</div>
-        <div id="calculator">
-            <div id="display"></div>
-            <div id="buttons">
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>+</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>-</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>*</button>
-                <button>AC</button>
-                <button>0</button>
-                <button>=</button>
-                <button>/</button>
-            </div>
-        </div>
-        <div id="timer"></div>
-        <div id="sound-toggle"></div>
-    </section>
-
-    <section id="info-section">
-        <h1 style="text-align:center;">О проекте</h1>
-        <p>Это игра-калькулятор, где вы должны решать математические проблемы, чтобы заработать очки.</p>
-        <h2>Как играть</h2>
-        <p>Вам будет представлено случайное число. Ваша задача - ввести выражение, результат которого равен этому числу. Вы можете использовать операции сложения, вычитания, умножения и деления.</p>
-    </section>
-
-    <section id="leaderboard-section">
-        <h1 style="text-align:center;">Таблица лидеров</h1>
-        <div id="leaderboard">
-            <!-- Leaderboard entries will be dynamically added here -->
-        </div>
-    </section>
-
-    <section id="upgrade-section">
-        <h1 style="text-align:center;">Улучшения</h1>
-        <div class="upgrade-button" data-cost="50" data-reward="2">Увеличить доход до +2 CALC за 50 монет</div>
-        <div class="upgrade-button" data-cost="150" data-reward="4">Увеличить доход до +4 CALC за 150 монет</div>
-        <div class="upgrade-button" data-cost="1000" data-reward="6">Увеличить доход до +6 CALC за 1000 монет</div>
-        <div class="upgrade-button" data-cost="5000" data-reward="10">Увеличить доход до +10 CALC за 5000 монет</div>
-        <div class="upgrade-button" data-cost="20000" data-reward="20">Увеличить доход до +20 CALC за 20000 монет</div>
-    </section>
-
-    <script>
-        let display = document.getElementById('display');
-        let randomNumberDisplay = document.getElementById('random-number');
-        let balanceDisplay = document.getElementById('balance-value');
-        let increaseAmountDisplay = document.getElementById('increase-amount');
-        let buttons = Array.from(document.getElementById('buttons').getElementsByTagName('button'));
-        let correctSound = new Audio('https://tegspor.github.io/506052__mellau__button-click-3.wav');
-        let soundToggle = document.getElementById('sound-toggle');
-        let balance = 0;
-        let timer;
-        let reward = 1;
-        let soundEnabled = true;
-        let userName = prompt("Введите ваше имя:", "User" + Math.floor(Math.random() * 1000));
-
-        function updateBalance(amount) {
-            balance += amount;
-            balanceDisplay.innerText = balance;
-            localStorage.setItem('balance', balance);
-            showIncreaseAmount(amount);
-            updateLeaderboard();
-        }
-
-        function showIncreaseAmount(amount) {
-            increaseAmountDisplay.innerText = `+${amount} $CALC`;
-            increaseAmountDisplay.style.display = 'block';
-            setTimeout(() => {
-                increaseAmountDisplay.style.display = 'none';
-            }, 2000);
-        }
-
-        function showRandomNumber() {
-            let min = 10;
-            let max = 99;
-            let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-            randomNumberDisplay.innerText = randomNumber;
-            updateTimer();
-        }
-
-        function updateTimer() {
-            clearInterval(timer);
-            let timerElement = document.getElementById('timer');
-            let width = 100;
-            timer = setInterval(() => {
-                if (width <= 0) {
-                    clearInterval(timer);
-                    showRandomNumber();
-                } else {
-                    width--;
-                    timerElement.style.width = width + '%';
-                }
-            }, 100);
-        }
-
-        function checkAnswer(expected) {
-            if (eval(display.innerText) === expected) {
-                if (soundEnabled) {
-                    correctSound.play();
-                }
-                updateBalance(reward);
-                showRandomNumber();
-                display.style.color = '#0f0';
-            } else {
-                display.style.color = 'red';
-                display.innerText = display.innerText.split('').join(' ');
-                display.style.animation = 'shakeNumber 0.5s';
-                setTimeout(() => {
-                    display.style.color = '#0f0';
-                    display.style.animation = '';
-                }, 500);
-            }
-            display.innerText = '';
-        }
-
-        buttons.forEach(button => {
-            button.addEventListener('click', (e) => {
-                switch(e.target.innerText){
-                    case '=':
-                        if (/^\d+$/.test(display.innerText)) {
-                            alert('Используйте арифметические операции для получения результата!');
-                            display.innerText = '';
-                        } else {
-                            checkAnswer(parseInt(randomNumberDisplay.innerText));
-                        }
-                        break;
-                    case 'AC':
-                        display.innerText = '';
-                        break;
-                    default:
-                        display.innerText += e.target.innerText;
-                }
-            });
-        });
-
-        document.getElementById('show-game').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'block';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-info').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'block';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-upgrades').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'block';
-            document.getElementById('leaderboard-section').style.display = 'none';
-        });
-
-        document.getElementById('show-leaderboard').addEventListener('click', (e) => {
-            e.stopPropagation();
-            document.getElementById('game-section').style.display = 'none';
-            document.getElementById('info-section').style.display = 'none';
-            document.getElementById('upgrade-section').style.display = 'none';
-            document.getElementById('leaderboard-section').style.display = 'block';
-            loadLeaderboard();
-        });
-
-        document.querySelectorAll('.upgrade-button').forEach(button => {
-            button.addEventListener('click', (e) => {
-                const cost = parseInt(e.target.getAttribute('data-cost'));
-                const newReward = parseInt(e.target.getAttribute('data-reward'));
-                if (confirm(`Вы действительно хотите потратить ${cost} $CALC, чтобы получать +${newReward} $CALC за правильный ответ?`)) {
-                    if (balance >= cost) {
-                        balance -= cost;
-                        reward = newReward;
-                        balanceDisplay.innerText = balance;
-                        localStorage.setItem('balance', balance);
-                        localStorage.setItem('reward', reward);
-                        alert(`Теперь вы получаете +${newReward} $CALC за правильный ответ!`);
-                    } else {
-                        alert('Недостаточно монет для улучшения.');
-                    }
-                }
-            });
-        });
-
-        soundToggle.addEventListener('click', () => {
-            soundEnabled = !soundEnabled;
-            soundToggle.classList.toggle('muted');
-            localStorage.setItem('soundEnabled', soundEnabled);
-        });
-
-        function loadLeaderboard() {
-            const leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-            const leaderboardElement = document.getElementById('leaderboard');
-            leaderboardElement.innerHTML = '';
-            leaderboard.forEach(entry => {
-                const entryElement = document.createElement('div');
-                entryElement.className = 'leaderboard-entry';
-                entryElement.innerHTML = `<span>${entry.name}</span><span>${entry.score}</span>`;
-                leaderboardElement.appendChild(entryElement);
-            });
-        }
-
-        function updateLeaderboard() {
-            let leaderboard = JSON.parse(localStorage.getItem('leaderboard')) || [];
-            const existingUser = leaderboard.find(user => user.name === userName);
-
-            if (existingUser) {
-                existingUser.score = balance;
-            } else {
-                leaderboard.push({name: userName, score: balance});
-            }
-
-            leaderboard = leaderboard.sort((a, b) => b.score - a.score).slice(0, 10);
-            localStorage.setItem('leaderboard', JSON.stringify(leaderboard));
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const savedBalance = localStorage.getItem('balance');
-            const savedReward = localStorage.getItem('reward');
-            const savedSoundEnabled = localStorage.getItem('soundEnabled');
-            if (savedBalance) {
-                balance = Number(savedBalance);
-                balanceDisplay.innerText = balance;
-            }
-            if (savedReward) {
-                reward = Number(savedReward);
-            }
-            if (savedSoundEnabled) {
-                soundEnabled = savedSoundEnabled === 'true';
-                if (!soundEnabled) {
-                    soundToggle.classList.add('muted');
-                }
-            }
-            showRandomNumber();
-            updateLeaderboard();
-        });
-
-        window.addEventListener('resize', adjustLayout);
-
-        function adjustLayout() {
-            const aspectRatio = window.innerWidth / window.innerHeight;
-            const calculator = document.getElementById('calculator');
-            if (aspectRatio < 0.5) {
-                calculator.style.transform = 'scale(0.8)';
-            } else if (aspectRatio < 0.75) {
-                calculator.style.transform = 'scale(0.9)';
-            } else {
-                calculator.style.transform = 'scale(1)';
-            }
-        }
-
-        adjustLayout();
-    </script>
+    <footer>
+        <p>Интернет-магазин одежды &copy; 2024</p>
+    </footer>
 </body>
 </html>
