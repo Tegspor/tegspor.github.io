@@ -3,127 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Интернет-магазин одежды</title>
+    <title>Telegram Mini App</title>
     <style>
         body {
             font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
         }
         .container {
-            width: 80%;
-            margin: auto;
-            overflow: hidden;
+            width: 300px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            text-align: center;
         }
-        header {
-            background: #333;
-            color: #fff;
-            padding-top: 30px;
-            min-height: 70px;
-            border-bottom: #77d8d8 3px solid;
+        .hidden {
+            display: none;
         }
-        header a {
-            color: #fff;
-            text-decoration: none;
-            text-transform: uppercase;
-            font-size: 16px;
-        }
-        header ul {
-            padding: 0;
-            list-style: none;
-        }
-        header li {
-            float: left;
-            display: inline;
-            padding: 0 20px 0 20px;
-        }
-        header #branding {
-            float: left;
-        }
-        header #branding h1 {
-            margin: 0;
-        }
-        header nav {
-            float: right;
+        button {
             margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
         }
-        .showcase {
-            min-height: 400px;
-            background: url('https://via.placeholder.com/1200x400') no-repeat 0 -400px;
-            text-align: center;
-            color: #fff;
-        }
-        .showcase h1 {
-            margin-top: 100px;
-            font-size: 55px;
-            margin-bottom: 10px;
-        }
-        .showcase p {
-            font-size: 20px;
-        }
-        #main {
-            padding: 20px;
-            background: #fff;
-            text-align: center;
-        }
-        #main h1 {
-            font-size: 30px;
-            margin-bottom: 10px;
-        }
-        #main p {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-        footer {
-            padding: 20px;
-            margin-top: 20px;
-            color: #fff;
-            background-color: #333;
-            text-align: center;
+        button:hover {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <div id="branding">
-                <h1>Интернет-магазин одежды</h1>
-            </div>
-            <nav>
-                <ul>
-                    <li><a href="#about">О нас</a></li>
-                    <li><a href="#instructions">Как заказать</a></li>
-                </ul>
-            </nav>
+    <div class="container">
+        <div id="main-screen">
+            <h2>Лого</h2>
+            <input type="text" id="username" placeholder="Имя пользователя">
+            <button onclick="payItem()">Оплатить товар</button>
+            <button onclick="trackDelivery()">Отследить доставку</button>
         </div>
-    </header>
-
-    <section class="showcase">
-        <div class="container">
-            <h1>Добро пожаловать в наш магазин!</h1>
-            <p>Лучшие предложения по отличным ценам</p>
+        
+        <div id="order-number-screen" class="hidden">
+            <h2>Введите номер заказа</h2>
+            <input type="text" id="order-number" placeholder="xxxx">
+            <input type="text" id="full-name" placeholder="ФИО">
+            <input type="text" id="address" placeholder="Адрес доставки">
+            <button onclick="showPaymentOptions()">Далее</button>
         </div>
-    </section>
 
-    <div id="main" class="container">
-        <section id="about">
-            <h1>О нас</h1>
-            <p>Мы предлагаем широкий ассортимент модной одежды для всех. Наши товары тщательно отбираются, чтобы удовлетворить самые взыскательные вкусы.</p>
-        </section>
+        <div id="payment-options-screen" class="hidden">
+            <h2>Окно оплаты</h2>
+            <p>На выбор: СБП, номер карты, крипта</p>
+        </div>
 
-        <section id="instructions">
-            <h1>Как заказать</h1>
-            <p>Следуйте этим простым шагам для заказа:</p>
-            <p>1. Написать в мой Telegram: <a href="https://t.me/kseniput">@kseniput</a></p>
-            <p>2. Выбрать категорию товара</p>
-            <p>3. Скинуть ссылку на товар и скрин</p>
-        </section>
+        <div id="order-status-screen" class="hidden">
+            <h2>Статус заказа</h2>
+            <p id="order-status">выкупается/выкуплен/отправлен/доставлен</p>
+            <div class="animated-image"></div>
+        </div>
+
+        <div id="description-screen" class="hidden">
+            <h2>Описание</h2>
+            <p>Тут должно быть описание нашего магазина, нас самих, кто мы по жизни, и в идеале хорошие отзывы.</p>
+        </div>
     </div>
+    <script>
+        function payItem() {
+            document.getElementById('main-screen').classList.add('hidden');
+            document.getElementById('order-number-screen').classList.remove('hidden');
+        }
 
-    <footer>
-        <p>Интернет-магазин одежды &copy; 2024</p>
-    </footer>
+        function trackDelivery() {
+            document.getElementById('main-screen').classList.add('hidden');
+            document.getElementById('description-screen').classList.remove('hidden');
+        }
+
+        function showPaymentOptions() {
+            document.getElementById('order-number-screen').classList.add('hidden');
+            document.getElementById('payment-options-screen').classList.remove('hidden');
+        }
+    </script>
 </body>
 </html>
