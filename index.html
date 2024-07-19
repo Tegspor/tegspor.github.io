@@ -19,12 +19,33 @@
             border: 1px solid #ccc;
             border-radius: 10px;
             text-align: center;
+            position: relative;
         }
-        .hidden {
-            display: none;
+        .logo {
+            width: 50px;
+            height: 50px;
+            border: 1px solid #000;
+            border-radius: 50%;
+            display: inline-block;
+            line-height: 50px;
+            margin-bottom: 20px;
+        }
+        .shop-name {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #007bff;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
         button {
-            margin-top: 10px;
             padding: 10px;
             width: 100%;
             background-color: #007bff;
@@ -36,54 +57,59 @@
         button:hover {
             background-color: #0056b3;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <div id="main-screen">
-            <h2>Лого</h2>
-            <input type="text" id="username" placeholder="Имя пользователя">
-            <button onclick="payItem()">Оплатить товар</button>
+        <div class="shop-name">Название шопа</div>
+        <div class="logo">Лого</div>
+        <input type="text" id="username" placeholder="Имя пользователя">
+        <div class="button-container">
+            <button onclick="payItem()">Оплатить заказ</button>
             <button onclick="trackDelivery()">Отследить доставку</button>
         </div>
-        
-        <div id="order-number-screen" class="hidden">
-            <h2>Введите номер заказа</h2>
-            <input type="text" id="order-number" placeholder="xxxx">
-            <input type="text" id="full-name" placeholder="ФИО">
-            <input type="text" id="address" placeholder="Адрес доставки">
-            <button onclick="showPaymentOptions()">Далее</button>
-        </div>
-
-        <div id="payment-options-screen" class="hidden">
-            <h2>Окно оплаты</h2>
-            <p>На выбор: СБП, номер карты, крипта</p>
-        </div>
-
-        <div id="order-status-screen" class="hidden">
-            <h2>Статус заказа</h2>
-            <p id="order-status">выкупается/выкуплен/отправлен/доставлен</p>
-            <div class="animated-image"></div>
-        </div>
-
-        <div id="description-screen" class="hidden">
-            <h2>Описание</h2>
-            <p>Тут должно быть описание нашего магазина, нас самих, кто мы по жизни, и в идеале хорошие отзывы.</p>
-        </div>
     </div>
+
+    <div class="container hidden" id="order-number-screen">
+        <h2>Введите номер заказа</h2>
+        <input type="text" id="order-number" placeholder="xxxx">
+        <input type="text" id="full-name" placeholder="ФИО">
+        <input type="text" id="address" placeholder="Адрес доставки">
+        <button onclick="showPaymentOptions()">Далее</button>
+    </div>
+
+    <div class="container hidden" id="payment-options-screen">
+        <h2>Окно оплаты</h2>
+        <p>На выбор: СБП, номер карты, крипта</p>
+    </div>
+
+    <div class="container hidden" id="order-status-screen">
+        <h2>Статус заказа</h2>
+        <p id="order-status">выкупается/выкуплен/отправлен/доставлен</p>
+        <div class="animated-image"></div>
+    </div>
+
+    <div class="container hidden" id="description-screen">
+        <h2>Описание</h2>
+        <p>Тут должно быть описание нашего магазина, нас самих, кто мы по жизни, и в идеале хорошие отзывы.</p>
+    </div>
+
     <script>
         function payItem() {
-            document.getElementById('main-screen').classList.add('hidden');
+            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
             document.getElementById('order-number-screen').classList.remove('hidden');
         }
 
         function trackDelivery() {
-            document.getElementById('main-screen').classList.add('hidden');
+            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
             document.getElementById('description-screen').classList.remove('hidden');
         }
 
         function showPaymentOptions() {
-            document.getElementById('order-number-screen').classList.add('hidden');
+            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
             document.getElementById('payment-options-screen').classList.remove('hidden');
         }
     </script>
