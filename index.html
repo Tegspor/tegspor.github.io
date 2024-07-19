@@ -12,23 +12,29 @@
             align-items: center;
             height: 100vh;
             margin: 0;
+            background-color: #f0f0f0;
         }
         .container {
-            width: 300px;
+            width: 100%;
+            max-width: 360px; /* Максимальная ширина для устройства с соотношением 9:16 */
+            aspect-ratio: 9 / 16; /* Соотношение сторон 9:16 */
             padding: 20px;
             border: 1px solid #ccc;
             border-radius: 10px;
             text-align: center;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             position: relative;
         }
         .logo {
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             border: 1px solid #000;
             border-radius: 50%;
             display: inline-block;
-            line-height: 50px;
+            line-height: 60px;
             margin-bottom: 20px;
+            background-color: #f0f0f0;
         }
         .shop-name {
             position: absolute;
@@ -46,13 +52,14 @@
             gap: 10px;
         }
         button {
-            padding: 10px;
+            padding: 15px;
             width: 100%;
             background-color: #007bff;
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
         }
         button:hover {
             background-color: #0056b3;
@@ -63,7 +70,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <div class="container" id="main-screen">
         <div class="shop-name">Название шопа</div>
         <div class="logo">Лого</div>
         <input type="text" id="username" placeholder="Имя пользователя">
@@ -99,17 +106,17 @@
 
     <script>
         function payItem() {
-            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
+            document.getElementById('main-screen').classList.add('hidden');
             document.getElementById('order-number-screen').classList.remove('hidden');
         }
 
         function trackDelivery() {
-            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
+            document.getElementById('main-screen').classList.add('hidden');
             document.getElementById('description-screen').classList.remove('hidden');
         }
 
         function showPaymentOptions() {
-            document.querySelectorAll('.container').forEach(container => container.classList.add('hidden'));
+            document.getElementById('order-number-screen').classList.add('hidden');
             document.getElementById('payment-options-screen').classList.remove('hidden');
         }
     </script>
